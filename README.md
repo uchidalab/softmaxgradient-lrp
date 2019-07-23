@@ -1,5 +1,7 @@
 # Visualization methods
 
+Right now this repository is private, but I will soon make it public with a bunch more code
+
 For now only GradCAM
 
 # Requires
