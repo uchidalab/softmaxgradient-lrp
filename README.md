@@ -2,14 +2,23 @@
 
 Right now this repository is private, but I will soon make it public with a bunch more code
 
-For now only GradCAM
+## Supports
+
+* GradCAM
+* GuidedGradCAM
+* Guided Back Prop
+* Layer-wise Relevance Propagation
+* Contrastive Layer-wise Relevance Propagation
+* Softmax Gradient Layer-wise Relevance Propagation
 
 # Requires
 
-keras
+python 3
 
-numpy
+## pip
 
-matplotlib
-
-innvestigate ( pip install git+https://github.com/albermax/innvestigate@1.0.0 )
+* keras
+* numpy
+* matplotlib
+* innvestigate 
+* scikit-image
