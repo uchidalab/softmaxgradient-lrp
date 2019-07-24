@@ -1,6 +1,6 @@
 # Softmax Gradient Layer-wise Relevance Propagation (SGLRP)
 
-This is a Keras implementation of the the paper *Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation*
+This is a Keras implementation of the the paper *Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation* by Ryouhei Kuroki, Brian Kenji Iwana, and Seiichi Uchida.
 
 ## Abstract
 
