@@ -86,6 +86,8 @@ class LRP(_MaskedDeepTaylor):
                  model, 
                  target_id, 
                  relu=False,
+                 low=-1.,
+                 high=1.,
                  **kwargs):
         """Target value:same as prediction，otherwise:0
         Arguments:
@@ -96,7 +98,7 @@ class LRP(_MaskedDeepTaylor):
         self.relu = relu
         R_mask = np.zeros((model.output_shape[1]))
         R_mask[target_id] = 1
-        super(LRP, self).__init__(model, R_mask=R_mask, **kwargs)
+        super(LRP, self).__init__(model, R_mask=R_mask, low=low, high=high, **kwargs)
                 
     def analyze(self, inputs):
         if self.relu:
@@ -185,8 +187,10 @@ class CLRP(_LRPSubtraction):
                  model, 
                  target_id, 
                  relu=False,
+                 low=-1.,
+                 high=1.,
                  **kwargs):
-        super(CLRP, self).__init__(model, target_id=target_id, **kwargs)
+        super(CLRP, self).__init__(model, target_id=target_id, low=low, high=high, **kwargs)
         self.relu = relu
         
     def _get_target_analyzer(self, **kwargs):
@@ -259,8 +263,10 @@ class SGLRP(_LRPSubtraction):
                  model, 
                  target_id, 
                  relu=False,
+                 low=-1.,
+                 high=1.,
                  **kwargs):
-        super(SGLRP, self).__init__(model, target_id=target_id, **kwargs)
+        super(SGLRP, self).__init__(model, target_id=target_id, low=low, high=high, **kwargs)
         self.relu = relu
         
     def _get_target_analyzer(self, **kwargs):

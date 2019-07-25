@@ -8,6 +8,60 @@ Convolutional Neural Networks (CNN) have become state-of-the-art models for imag
 
 ## Usage
 
+### SGLRP Class
+
+```
+utils.visualizations.SGLRP(partial_model, target_id, relu=False, low=-1., high=1., **kwargs)
+```
+#### Arguments
+
+**partial_model** : *Keras Model instance*
+    A keras model with the output of softmax cut off, but the input to the output layer intact. The partial model can be found using the innvestigate library using the ```innvestigate.utils.keras.graph.pre_softmax_tensors()``` function.
+    
+**target_id** : *int*
+    The index of the target class.
+    
+**relu** : *bool*
+    Controls if ReLU is applied to the visualization. ```True``` means that only the positive relevance is shown; ```False``` shows both the positive and negative relevance.
+    
+**low** : *float*
+    The upper bounds of the inputs.
+    
+**high** : *float*
+    The lower bounds of the inputs.
+    
+### SGLRP.analyze()
+    
+```
+SGLRP.analyze(input_imgs)
+```
+#### Arguments
+
+**input_imgs** : *4D array*
+    Array of input images in the format of ```(image_id, height, width, channel)```.
+    
+
+#### Returns
+
+*4D array*
+    Array of heatmaps in the format of ```(image_id, height, width, channel)```.
+
+### Simple Example
+
+```
+from utils.visualizations import SGLRP
+import innvestigate.utils as iutils
+
+model = [keras model]
+partial_model = Model(inputs=model.inputs, outputs=iutils.keras.graph.pre_softmax_tensors(model.outputs)) 
+
+target_id = [id of target class]
+analysis = SGLRP(partial_model, target_id).analyze(input_imgs)
+
+```
+
+### Full Example
+
 [Example Notebook](example.ipynb)
 
 ## Requires

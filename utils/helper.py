@@ -1,10 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def heatmap(heatmap, relu=False, cmap="seismic", interpolation="none", colorbar=False, M=None):
-    if relu:
-        heatmap = heatmap * (heatmap > 0)
-
+def heatmap(heatmap, cmap="seismic", interpolation="none", colorbar=False, M=None):
     if M is None:
         M = np.abs(heatmap).max()
     plt.imshow(heatmap, cmap=cmap, vmax=M, vmin=-M, interpolation=interpolation)
