@@ -321,12 +321,13 @@ class GuidedGradCAM(object):
     def __init__(self, 
                  model, 
                  target_id, 
+                 layer_name="block5_pool",
                  relu=False,
                  **kwargs):
         self.model = model
         self.target_id = target_id
         self.relu = relu
-        self.gradcam = GradCAM(self.model, target_id=self.target_id, relu=relu, **kwargs)
+        self.gradcam = GradCAM(self.model, target_id=self.target_id, layer_name=layer_name, relu=relu, **kwargs)
         self.guidedbackprop = GBP(self.model, target_id=self.target_id, relu=relu, **kwargs)
                 
     def analyze(self, inputs):
