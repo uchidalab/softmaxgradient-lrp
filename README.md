@@ -1,6 +1,6 @@
 # Softmax Gradient Layer-wise Relevance Propagation (SGLRP)
 
-This is a Keras implementation of the the paper *Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation* by Ryouhei Kuroki, Brian Kenji Iwana, and Seiichi Uchida.
+This is a Keras implementation of the the paper *Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation* by Ryouhei Kuroki, Brian Kenji Iwana, and Seiichi Uchida. [arXiv](https://arxiv.org/abs/1908.04351)
 
 ## Abstract
 
@@ -77,4 +77,17 @@ This code was developed in Python 3.5.2.
 
 ```
 pip install keras==2.2.4 numpy==1.14.5 matplotlib==2.2.2 innvestigate==1.0.0 scikit-image==0.14.1
+```
+
+## Citation
+
+B. K. Iwana, R. Kuroki, and S. Uchida, "Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation," arXiv preprint, arXiv:1908.04351.
+
+```
+@article{iwana2019explaining,
+  title={Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation},
+  author={Iwana, Brian Kenji and Kuroki, Ryohei and Uchida, Seiichi},
+  journal={arXiv preprint arXiv:1908.04351},
+  year={2019}
+}
 ```
