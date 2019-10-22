@@ -220,26 +220,30 @@ class _SGLRPBase(BoundedDeepTaylor):
     def initialize_r_mask(self):
         raise NotImplementedError
     
+   
     def _head_mapping(self, X):
         """
-        target:yt，others:ytyj/(1-yt)
+        target:yt(1-yt)  base: ytyi
         """
+        
+        # target is 1, else 0
         Kronecker_delta = np.zeros(self.class_num)
         Kronecker_delta[self.target_id] = 1
         Kronecker_delta = K.constant(Kronecker_delta)
 
+        # target is 0, else 1
         Inv_Kronecker_delta = np.ones(self.class_num)
         Inv_Kronecker_delta[self.target_id] = 0
         Inv_Kronecker_delta = K.constant(Inv_Kronecker_delta)
-
+        
+        X = _SoftMax()(X)
         target_value = Lambda(lambda x: (x[:, self.target_id]))(X)
 
-        X = _SoftMax()(X)
-        X = Lambda(
-            lambda x: x * (Kronecker_delta) - x * (Inv_Kronecker_delta) * target_value[:, None] / (1 - target_value[:, None]),
-            output_shape=lambda input_shape: (None, int(input_shape[1])))(X)
 
-        # targetかdualかでマスクが変わる
+        X = Lambda(
+            lambda x: x * (1 - x) * Kronecker_delta + x * Inv_Kronecker_delta * target_value[:, None],
+            output_shape=lambda input_shape: (None, int(input_shape[1])))(X)
+        
         X = Lambda(lambda x: (self.R_mask * x))(X)
         return X
 
@@ -280,6 +284,84 @@ class SGLRP(_LRPSubtraction):
             return np.maximum(super(SGLRP, self).analyze(inputs), 0)
         else:
             return super(SGLRP, self).analyze(inputs)
+
+
+class _SGLRP2Base(BoundedDeepTaylor):
+    """Initialize R with Softmax Gradient
+    """
+    def __init__(self, 
+                 model, 
+                 target_id, 
+                 **kwargs):
+        super(_SGLRP2Base, self).__init__(model, neuron_selection_mode="all", **kwargs)
+        self.target_id = target_id
+        self.class_num = model.output_shape[1]
+        self.initialize_r_mask()
+
+    def initialize_r_mask(self):
+        raise NotImplementedError
+    
+    def _head_mapping(self, X):
+        """
+        target:yt，others:ytyj/(1-yt)
+        """
+        # It's possible to have a perfect prediction. A small amount is added to prevent problems. 
+        epsilon = 1e-6 
+        
+        Kronecker_delta = np.zeros(self.class_num)
+        Kronecker_delta[self.target_id] = 1
+        Kronecker_delta = K.constant(Kronecker_delta)
+
+        Inv_Kronecker_delta = np.ones(self.class_num)
+        Inv_Kronecker_delta[self.target_id] = 0
+        Inv_Kronecker_delta = K.constant(Inv_Kronecker_delta)
+
+        target_value = Lambda(lambda x: (x[:, self.target_id]))(X)
+
+        X = _SoftMax()(X)
+        X = Lambda(
+            lambda x: x * (Kronecker_delta) - x * (Inv_Kronecker_delta) * target_value[:, None] / (1 - target_value[:, None] + epsilon),
+            output_shape=lambda input_shape: (None, int(input_shape[1])))(X)
+
+        X = Lambda(lambda x: (self.R_mask * x))(X)
+        return X
+
+
+class _SGLRP2Target(_SGLRP2Base):
+    def initialize_r_mask(self):
+        R_mask = np.zeros(self.class_num)
+        R_mask[self.target_id] = 1
+        self.R_mask = K.constant(R_mask)
+
+
+class _SGLRP2Dual(_SGLRP2Base):
+    def initialize_r_mask(self):
+        R_mask = np.ones(self.class_num)
+        R_mask[self.target_id] = 0
+        self.R_mask = K.constant(R_mask)
+        
+class SGLRP2(_LRPSubtraction):
+    def __init__(self, 
+                 model, 
+                 target_id, 
+                 relu=False,
+                 low=-1.,
+                 high=1.,
+                 **kwargs):
+        super(SGLRP2, self).__init__(model, target_id=target_id, low=low, high=high, **kwargs)
+        self.relu = relu
+        
+    def _get_target_analyzer(self, **kwargs):
+        return _SGLRP2Target(self.model, target_id=self.target_id, **kwargs)
+
+    def _get_others_analyzer(self, **kwargs):
+        return _SGLRP2Dual(self.model, target_id=self.target_id, **kwargs)
+    
+    def analyze(self, inputs):
+        if self.relu:
+            return np.maximum(super(SGLRP2, self).analyze(inputs), 0)
+        else:
+            return super(SGLRP2, self).analyze(inputs)
         
         
 class GradCAM(object):
