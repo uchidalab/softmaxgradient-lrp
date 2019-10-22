@@ -6,6 +6,14 @@ This is a Keras implementation of the the paper *Explaining Convolutional Neural
 
 Convolutional Neural Networks (CNN) have become state-of-the-art in the field of image classification. However, not everything is understood about their inner representations. This paper tackles the interpretability and explainability of the predictions of CNNs for multi-class classification problems. Specifically, we propose a novel visualization method of pixel-wise input attribution called Softmax-Gradient Layer-wise Relevance Propagation (SGLRP). The proposed model is a class discriminate extension to Deep Taylor Decomposition (DTD) using the gradient of softmax to back propagate the relevance of the output probability to the input image. Through qualitative and quantitative analysis, we demonstrate that SGLRP can successfully localize and attribute the regions on input images which contribute to a target object's classification. We show that the proposed method excels at discriminating the target objects class from the other possible objects in the images. We confirm that SGLRP performs better than existing Layer-wise Relevance Propagation (LRP) based methods and can help in the understanding of the decision process of CNNs. 
 
+## Details
+
+SGLRP is a class contrastive extension of LRP. The general idea is that a relevance *penalty* is propagated through the network to create the relevance heatmaps. 
+
+Specifically, we use the gradient of softmax as the initial relevance signal for LRP. Or,
+![sglrpdef](https://latex.codecogs.com/gif.latex?R_%7Bn%7D%5E%7B%28L%29%7D%20%3D%20%5Cfrac%7B%5Cpartial%20%5Chat%7By%7D_t%7D%7B%5Cpartial%20z_n%7D%20%3D%20%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%26%20%5Chat%7By%7D_t%281-%5Chat%7By%7D_t%29%20%26%20n%3Dt%20%5C%5C%20%26%20-%20%5Chat%7By%7D_t%5Chat%7By%7D_n%20%26%20%5Cmathrm%7Botherwise%7D%2C%20%5Cend%7Bmatrix%7D%5Cright.)
+where *t* is the target class and *n* is the other classes.
+
 ## Usage
 
 ### SGLRP Class
