@@ -12,6 +12,7 @@ SGLRP is a class contrastive extension of LRP. The general idea is that a releva
 
 Specifically, we use the gradient of softmax as the initial relevance signal for LRP. Or,
 ![sglrpdef](https://latex.codecogs.com/gif.latex?R_%7Bn%7D%5E%7B%28L%29%7D%20%3D%20%5Cfrac%7B%5Cpartial%20%5Chat%7By%7D_t%7D%7B%5Cpartial%20z_n%7D%20%3D%20%5Cleft%5C%7B%5Cbegin%7Bmatrix%7D%20%26%20%5Chat%7By%7D_t%281-%5Chat%7By%7D_t%29%20%26%20n%3Dt%20%5C%5C%20%26%20-%20%5Chat%7By%7D_t%5Chat%7By%7D_n%20%26%20%5Cmathrm%7Botherwise%7D%2C%20%5Cend%7Bmatrix%7D%5Cright.)
+
 where *t* is the target class and *n* is the other classes.
 
 ## Usage
