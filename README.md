@@ -15,6 +15,23 @@ Specifically, we use the gradient of softmax as the initial relevance signal for
 
 where *t* is the target class and *n* is the other classes.
 
+## Requires
+
+This code was developed in Python 3.5.2.
+
+### Normal Install
+
+```
+pip install keras==2.1.5 numpy==1.14.5 matplotlib==2.2.2 innvestigate==1.0.0 scikit-image==0.14.1
+```
+
+### Docker
+
+```
+sudo docker build -t sglrp .
+docker run --runtime nvidia -rm -it -p 127.0.0.1:8888:8888 -v `pwd`:/work -w /work sglrp jupyter notebook --allow-root
+```
+
 ## Usage
 
 ### SGLRP Class
@@ -79,14 +96,6 @@ analysis = SGLRP(partial_model, target_id).analyze(input_imgs)
 ### Full Example
 
 [Example Notebook](example.ipynb)
-
-## Requires
-
-This code was developed in Python 3.5.2.
-
-```
-pip install keras==2.2.4 numpy==1.14.5 matplotlib==2.2.2 innvestigate==1.0.0 scikit-image==0.14.1
-```
 
 ## Citation
 
