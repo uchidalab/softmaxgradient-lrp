@@ -225,6 +225,8 @@ class _SGLRPBase(BoundedDeepTaylor):
         """
         target:yt(1-yt)  base: ytyi
         """
+        # It's possible to have a perfect prediction. A small amount is added to prevent problems. 
+        epsilon = 1e-8
         
         # target is 1, else 0
         Kronecker_delta = np.zeros(self.class_num)
@@ -241,7 +243,7 @@ class _SGLRPBase(BoundedDeepTaylor):
 
 
         X = Lambda(
-            lambda x: x * (1 - x) * Kronecker_delta + x * Inv_Kronecker_delta * target_value[:, None],
+            lambda x: (x * (1. - x) + epsilon) * Kronecker_delta + x * Inv_Kronecker_delta * target_value[:, None],
             output_shape=lambda input_shape: (None, int(input_shape[1])))(X)
         
         X = Lambda(lambda x: (self.R_mask * x))(X)
@@ -306,7 +308,7 @@ class _SGLRP2Base(BoundedDeepTaylor):
         target:yt，others:ytyj/(1-yt)
         """
         # It's possible to have a perfect prediction. A small amount is added to prevent problems. 
-        epsilon = 1e-6 
+        epsilon = 1e-8
         
         Kronecker_delta = np.zeros(self.class_num)
         Kronecker_delta[self.target_id] = 1
