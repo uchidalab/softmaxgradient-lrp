@@ -1,6 +1,8 @@
 import numpy as np
 from keras import backend as K
 from innvestigate.analyzer import BoundedDeepTaylor, GuidedBackprop
+from innvestigate.analyzer import LRPEpsilon, LRPSequentialPresetAFlat, LRPSequentialPresetBFlat
+from innvestigate.analyzer import Deconvnet, IntegratedGradients, SmoothGrad
 import innvestigate.utils as iutils
 from keras.layers import Lambda, Layer
 from skimage.transform import resize
@@ -365,6 +367,170 @@ class SGLRP2(_LRPSubtraction):
         else:
             return super(SGLRP2, self).analyze(inputs)
         
+class LRPE(LRPEpsilon):
+    def __init__(self, 
+                 model,
+                 target_id, 
+                 relu=False, 
+                 **kwargs):
+        self.relu=relu
+        R_mask = np.zeros(model.output_shape[1])
+        R_mask[target_id] = 1
+        self.initialize_r_mask(R_mask)
+        super(LRPE, self).__init__(model, neuron_selection_mode="all", **kwargs)
+
+    def initialize_r_mask(self, R_mask):
+        """0か1のベクトルでRが通れる道をターゲットのみに限定
+        Arguments:
+            initial_R_mask {[type]} -- [description]
+        """
+
+        self.R_mask = K.constant(R_mask)
+
+    def _head_mapping(self, X):
+        """
+        初期化時に与えたOne-hotベクターとの要素積をとることでRが通れる道を限定
+        """
+        initial_R = Lambda(lambda x: (x * self.R_mask))(X)
+        return initial_R
+    
+    def analyze(self, inputs):
+        if self.relu:
+            return np.maximum(super(LRPE, self).analyze(inputs), 0)
+        else:
+            return super(LRPE, self).analyze(inputs)
+    
+class LRPB(LRPSequentialPresetBFlat):
+    def __init__(self, 
+                 model,
+                 target_id, 
+                 relu=False, 
+                 **kwargs):
+        self.relu=relu
+        R_mask = np.zeros(model.output_shape[1])
+        R_mask[target_id] = 1
+        self.initialize_r_mask(R_mask)
+        super(LRPB, self).__init__(model, neuron_selection_mode="all", **kwargs)
+
+    def initialize_r_mask(self, R_mask):
+        """0か1のベクトルでRが通れる道をターゲットのみに限定
+        Arguments:
+            initial_R_mask {[type]} -- [description]
+        """
+
+        self.R_mask = K.constant(R_mask)
+
+    def _head_mapping(self, X):
+        """
+        初期化時に与えたOne-hotベクターとの要素積をとることでRが通れる道を限定
+        """
+        initial_R = Lambda(lambda x: (x * self.R_mask))(X)
+        return initial_R
+    
+    def analyze(self, inputs):
+        if self.relu:
+            return np.maximum(super(LRPB, self).analyze(inputs), 0)
+        else:
+            return super(LRPB, self).analyze(inputs)
+
+class LRPA(LRPSequentialPresetAFlat):
+    def __init__(self, 
+                 model,
+                 target_id, 
+                 relu=False, 
+                 **kwargs):
+        self.relu=relu
+        R_mask = np.zeros(model.output_shape[1])
+        R_mask[target_id] = 1
+        self.initialize_r_mask(R_mask)
+        super(LRPA, self).__init__(model, neuron_selection_mode="all", **kwargs)
+
+    def initialize_r_mask(self, R_mask):
+        """0か1のベクトルでRが通れる道をターゲットのみに限定
+        Arguments:
+            initial_R_mask {[type]} -- [description]
+        """
+
+        self.R_mask = K.constant(R_mask)
+
+    def _head_mapping(self, X):
+        """
+        初期化時に与えたOne-hotベクターとの要素積をとることでRが通れる道を限定
+        """
+        initial_R = Lambda(lambda x: (x * self.R_mask))(X)
+        return initial_R
+    
+    def analyze(self, inputs):
+        if self.relu:
+            return np.maximum(super(LRPA, self).analyze(inputs), 0)
+        else:
+            return super(LRPA, self).analyze(inputs)
+        
+class SG(SmoothGrad):
+    def __init__(self, 
+                 model,
+                 target_id, 
+                 relu=False, 
+                 **kwargs):
+        self.relu=relu
+        R_mask = np.zeros(model.output_shape[1])
+        R_mask[target_id] = 1
+        self.initialize_r_mask(R_mask)
+        super(SG, self).__init__(model, **kwargs)
+
+    def initialize_r_mask(self, R_mask):
+        """0か1のベクトルでRが通れる道をターゲットのみに限定
+        Arguments:
+            initial_R_mask {[type]} -- [description]
+        """
+
+        self.R_mask = K.constant(R_mask)
+
+    def _head_mapping(self, X):
+        """
+        初期化時に与えたOne-hotベクターとの要素積をとることでRが通れる道を限定
+        """
+        initial_R = Lambda(lambda x: (x * self.R_mask))(X)
+        return initial_R
+    
+    def analyze(self, inputs):
+        if self.relu:
+            return np.maximum(super(SG, self).analyze(inputs), 0)
+        else:
+            return super(SG, self).analyze(inputs)
+        
+class IG(IntegratedGradients):
+    def __init__(self, 
+                 model,
+                 target_id, 
+                 relu=False, 
+                 **kwargs):
+        self.relu=relu
+        R_mask = np.zeros(model.output_shape[1])
+        R_mask[target_id] = 1
+        self.initialize_r_mask(R_mask)
+        super(IG, self).__init__(model, **kwargs)
+
+    def initialize_r_mask(self, R_mask):
+        """0か1のベクトルでRが通れる道をターゲットのみに限定
+        Arguments:
+            initial_R_mask {[type]} -- [description]
+        """
+
+        self.R_mask = K.constant(R_mask)
+
+    def _head_mapping(self, X):
+        """
+        初期化時に与えたOne-hotベクターとの要素積をとることでRが通れる道を限定
+        """
+        initial_R = Lambda(lambda x: (x * self.R_mask))(X)
+        return initial_R
+    
+    def analyze(self, inputs):
+        if self.relu:
+            return np.maximum(super(IG, self).analyze(inputs), 0)
+        else:
+            return super(IG, self).analyze(inputs)
         
 class GradCAM(object):
     def __init__(self,
