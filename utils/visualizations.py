@@ -565,7 +565,38 @@ class GradCAM(object):
             return np.maximum(resized_cams, 0)
         else:
             return resized_cams
-    
+
+class MultiGradCAM(object):
+    def __init__(self,
+                 model,
+                 target_id,
+                 layer_name="block5_pool",
+                 relu=False,
+                 **kwargs):
+
+        class_output = model.output[:, target_id]
+        # if the layer is shared, this needs to be done
+        conv_output = model.get_layer(layer_name).get_output_at(0)
+        grads = K.gradients(class_output, conv_output)[0]  
+        self.gradient_function = K.function(
+            [model.input[0], model.input[1]], # this is the key difference, two inputs
+            [conv_output, grads],
+        ) 
+        self.relu = relu
+
+    def analyze(self, inputs):
+        outputs, grads_vals = self.gradient_function(inputs)
+        weights = np.mean(grads_vals, axis=(1, 2))
+        cams = (outputs * weights[:, np.newaxis, np.newaxis, :]).sum(
+            axis=3, keepdims=True)
+        
+        # the reshape was wrong because the input size is different with two inputs
+        resized_cams = resize(cams, np.shape(inputs[0]), mode='reflect', anti_aliasing=True)
+
+        if self.relu:
+            return np.maximum(resized_cams, 0)
+        else:
+            return resized_cams
         
 class GuidedGradCAM(object):
     def __init__(self, 
