@@ -6,6 +6,14 @@ This is a Keras implementation of the the paper *Explaining Convolutional Neural
 
 Convolutional Neural Networks (CNN) have become state-of-the-art in the field of image classification. However, not everything is understood about their inner representations. This paper tackles the interpretability and explainability of the predictions of CNNs for multi-class classification problems. Specifically, we propose a novel visualization method of pixel-wise input attribution called Softmax-Gradient Layer-wise Relevance Propagation (SGLRP). The proposed model is a class discriminate extension to Deep Taylor Decomposition (DTD) using the gradient of softmax to back propagate the relevance of the output probability to the input image. Through qualitative and quantitative analysis, we demonstrate that SGLRP can successfully localize and attribute the regions on input images which contribute to a target object's classification. We show that the proposed method excels at discriminating the target objects class from the other possible objects in the images. We confirm that SGLRP performs better than existing Layer-wise Relevance Propagation (LRP) based methods and can help in the understanding of the decision process of CNNs. 
 
+## News
+
+- 2020/01/26: SGLRPSeqA, SGLRPSeqB - New implentation of SGLRP based on Sequential LRP. White paper incoming, for now if you use SGLRPSeqA or SGLRPSeqB, cite the paper below.
+- 2019/12/20: GPU docker support
+- 2019/11/02: ICCV Workshop on Explainable AI
+- 2019/08/06: ArXiv paper posted
+- 2019/07/23: Initial commit
+
 ## Details
 
 SGLRP is a class contrastive extension of LRP. The general idea is that a relevance *penalty* is propagated through the network to create the relevance heatmaps. 
@@ -17,12 +25,12 @@ where *t* is the target class and *n* is the other classes.
 
 ## Requires
 
-This code was developed in Python 3.5.2.
+This code was developed in Python 3.5.2. and requires Tensorflow 1.10.0
 
 ### Normal Install
 
 ```
-pip install keras==2.1.5 numpy==1.14.5 matplotlib==2.2.2 innvestigate==1.0.0 scikit-image==0.14.1
+pip install keras==2.1.5 numpy==1.14.5 matplotlib==2.2.2 innvestigate==1.0.8.3 scikit-image==0.15.0
 ```
 
 ### Docker
