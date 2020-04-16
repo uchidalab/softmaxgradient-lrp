@@ -1,6 +1,6 @@
 # Softmax Gradient Layer-wise Relevance Propagation (SGLRP)
 
-This is a Keras implementation of the the paper *Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation* by Ryouhei Kuroki, Brian Kenji Iwana, and Seiichi Uchida. [arXiv](https://arxiv.org/abs/1908.04351)
+This is a Keras implementation of the the paper Brian Kenji Iwana, Ryouhei Kuroki, and Seiichi Uchida, *Explaining Convolutional Neural Networks using Softmax Gradient Layer-wise Relevance Propagation,* ICCV Workshops, 2019. [arXiv](https://arxiv.org/abs/1908.04351)
 
 ## Abstract
 
@@ -8,7 +8,7 @@ Convolutional Neural Networks (CNN) have become state-of-the-art in the field of
 
 ## News
 
-- 2020/01/26: SGLRPSeqA, SGLRPSeqB - New implentation of SGLRP based on Sequential LRP. White paper incoming, for now if you use SGLRPSeqA or SGLRPSeqB, cite the paper below.
+- 2020/01/26: SGLRPSeqA, SGLRPSeqB - New implentation of SGLRP based on Sequential LRP. White paper incoming, for now if you use SGLRPSeqA or SGLRPSeqB, cite the paper below. Warning, experimental, sometimes it doesn't work as expected.
 - 2019/12/20: GPU docker support
 - 2019/11/02: ICCV Workshop on Explainable AI
 - 2019/08/06: ArXiv paper posted
